@@ -29,6 +29,6 @@ function User_Order(productId,action){
         return response.json()
     })
     .then((data)=>{
-        console.log('data',data)
+        console.log('data:',data)
     })
 }

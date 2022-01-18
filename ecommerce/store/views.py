@@ -34,4 +34,15 @@ def update_item(request):
     action=data['action']
     print('Action:',action)
     print('productId:',productId)
+    customer = request.user.customer
+    Product=product.objects.get(id=productId)
+    Order, created = order.objects.get_or_create(customer=customer, complete=False)
+    orderItem,created=order_item.objects.get_or_create(order=Order,product=Product)
+    if action=='add':
+        orderItem.quantity=(orderItem.quantity + 1)
+    elif action=='remove':
+        orderItem.quantity = (orderItem.quantity - 1)
+    orderItem.save()
+    if orderItem.quantity<=0:
+        orderItem.delete()
     return JsonResponse('Item was added',safe=False)
