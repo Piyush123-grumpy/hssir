@@ -5,28 +5,40 @@ from django.http import JsonResponse
 import json
 # Create your views here.
 def store(request):
+    if request.user.is_authenticated:
+        customer = request.user.customer
+        Order, created = order.objects.get_or_create(customer=customer, complete=False)
+        items = Order.order_item_set.all()
+        cartItems=Order.get_cart_items
+    else:
+        items = []
+        Order = {'get_cart_total': 0, 'get_cart_items': 0,'shipping':False}
+        cartItems=Order['get_cart_items']
     products=product.objects.all()
-    context={'products':products}
+    context={'products':products,'cartItems':cartItems}
     return render(request,'store/store.html',context)
 def cart(request):
     if request.user.is_authenticated:
         customer=request.user.customer
         Order,created=order.objects.get_or_create(customer=customer,complete=False)
         items=Order.order_item_set.all()
+        cartItems=Order.get_cart_items
     else:
         items=[]
-        Order={'get_cart_total':0,'get_cart_items':0}
-    context={'items':items,'order':Order}
+        Order={'get_cart_total':0,'get_cart_items':0,'shipping':False}
+        cartItems=Order['get_cart_items']
+    context={'items':items,'order':Order,'cartItems':cartItems}
     return render(request,'store/cart.html',context)
 def checkout(request):
     if request.user.is_authenticated:
         customer = request.user.customer
         Order, created = order.objects.get_or_create(customer=customer, complete=False)
         items = Order.order_item_set.all()
+        cartItems=Order.get_cart_items
     else:
         items = []
-        Order = {'get_cart_total': 0, 'get_cart_items': 0}
-    context = {'items': items, 'order': Order}
+        Order = {'get_cart_total': 0, 'get_cart_items': 0,'shipping':False}
+    context = {'items': items, 'order': Order,'cartItems':cartItems}
     return render(request,'store/checkout.html',context)
 def update_item(request):
     data=json.loads(request.body)

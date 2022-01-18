@@ -30,5 +30,6 @@ function User_Order(productId,action){
     })
     .then((data)=>{
         console.log('data:',data)
+        location.reload()
     })
 }

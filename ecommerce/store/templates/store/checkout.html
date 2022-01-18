@@ -59,7 +59,7 @@
                 </div>
             </div>
             {% endfor %}
-            <h5>Items: {{order.get_cart_items|floatformat:2}}</h5>
+            <h5>Items: {{order.get_cart_items}}</h5>
             <h5>Total: {{order.get_cart_total|floatformat:2}}</h5>
         </div>
         <br>
@@ -69,4 +69,10 @@
 
     </div>
 </div>
+<script type="text/javascript">
+    var shipping='{{order.shipping}}'
+    if (shipping=='False'){
+        document.getElementById('shipping-info').innerHTML=''
+    }
+</script>
 {% endblock content %}
